@@ -1,49 +1,98 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="mg">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MadaAgri - Fambolena</title>
-  <style>
-    body { font-family: Arial, sans-serif; background-color: #f4f9f4; margin: 0; padding: 20px; text-align: center; }
-    header { background-color: #2e7d32; color: white; padding: 15px; border-radius: 8px; }
-    .menu { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-    .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; font-weight: bold; color: #2e7d32; }
-    .card:hover { background-color: #e8f5e9; }
-    #torohevitra { margin-top: 20px; padding: 15px; background: white; border-radius: 8px; display: none; text-align: left; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#176b38">
+<title>MadaAgri</title>
+<style>
+:root{--green:#176b38;--light:#eaf5ed;--ink:#183326}
+*{box-sizing:border-box}body{margin:0;background:#f3f8f3;color:var(--ink);font:16px system-ui,Arial,sans-serif}
+header{background:var(--green);color:white;padding:18px 16px 15px;position:sticky;top:0;z-index:2}
+h1{font-size:22px;margin:0}header p{margin:5px 0 0;font-size:13px;opacity:.9}
+nav{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:10px;background:#fff;position:sticky;top:72px;z-index:2;box-shadow:0 2px 8px #0001}
+nav button,.btn,.choice{border:0;border-radius:10px;padding:12px;font-size:14px;font-weight:600}
+nav button{background:var(--light);color:var(--green)}nav button.active,.btn{background:var(--green);color:#fff}
+main{padding:12px;max-width:600px;margin:auto}.notice{background:#fff4d6;border-left:4px solid #e0a000;padding:12px;border-radius:8px;font-size:14px;margin-bottom:12px}
+.panel{display:none;background:white;padding:15px;border-radius:14px;box-shadow:0 2px 10px #0000000a;margin-bottom:12px}.panel.active{display:block}
+h2{font-size:18px;margin:0 0 12px;color:var(--green)}label{display:block;font-size:14px;font-weight:600;margin:10px 0 5px}
+input,select{width:100%;padding:13px;border:1px solid #cbd8ce;border-radius:9px;font-size:16px;background:white}
+button{cursor:pointer}.btn{width:100%;margin-top:12px}.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}.choice{background:#edf6ef;color:#185d33;text-align:left;border:1px solid #c9e1cf}
+.result{display:none;margin-top:12px;padding:13px;background:#eff8f0;border-left:4px solid var(--green);border-radius:8px;line-height:1.5}
+.small{font-size:12px;color:#66766a;margin-top:12px}.metric{font-size:20px;font-weight:800;color:var(--green)}
+footer{text-align:center;color:#718077;font-size:12px;padding:20px}
+</style>
 </head>
 <body>
+<header><h1>🌾 MadaAgri</h1><p>Ny teknolojia manampy ny tantsaha Malagasy</p></header>
+<nav id="nav">
+<button class="active" onclick="showTab('water',this)">💧 Rano</button>
+<button onclick="showTab('disease',this)">🍃 Aretina</button>
+<button onclick="showTab('calendar',this)">📅 Voly</button>
+<button onclick="showTab('profit',this)">💰 Tombony</button>
+<button onclick="showTab('words',this)">🌍 Fiteny</button>
+<button onclick="showTab('about',this)">ℹ️ Momba</button>
+</nav>
+<main>
+<div class="notice">📍 <b>Torohevitra ho an'i Toliara:</b> jereo hatrany ny toetry ny orana sy ny rano misy eo an-toerana. Miovaova arakaraka ny tany sy ny karazam-bary ny filàna.</div>
 
-  <header>
-    <h1>🌾 MadaAgri</h1>
-    <p>Mpanampy ny tantsaha malagasy</p>
-  </header>
+<section class="panel active" id="water">
+<h2>💧 Fanaraha-maso ny rano</h2>
+<label>Dingana amin'ny fambolena</label>
+<select id="stage">
+<option value="0">Vao nambolena</option><option value="1">Fitsimohana sy fitomboana</option><option value="2">Fiakaran'ny vary</option><option value="3">Fahamatorana / alohan'ny fijinjana</option>
+</select>
+<label>Haavon'ny rano (cm)</label><input id="waterLevel" type="number" min="0" step="0.5" placeholder="Ohatra: 3">
+<button class="btn" onclick="checkWater()">Jereo ny torohevitra</button><div class="result" id="waterResult"></div>
+<p class="small">Fanoroana ankapobeny ihany. Araho ny torohevitry ny teknisianina sy ny fomba fambolena ampiasain'ny faritra.</p>
+</section>
 
-  <div class="menu">
-    <div class="card" onclick="asehoy('vary')">🌱 Fambolena Vary</div>
-    <div class="card" onclick="asehoy('katsaka')">🌽 Fambolena Katsaka</div>
-    <div class="card" onclick="asehoy('rano')">💧 Fitantanana Rano</div>
-    <div class="card" onclick="asehoy('fiteny')">🌍 Fiteny (MG / FR)</div>
-  </div>
+<section class="panel" id="disease">
+<h2>🍃 Olana hita amin'ny ravina</h2>
+<div class="choices" id="symptoms"></div><div class="result" id="diseaseResult"></div>
+<p class="small">Tsy fitiliana azo antoka ny soritr'aretina amin'ny alalan'ny soratra fotsiny. Raha miparitaka ny aretina dia manatona teknisianina momba ny fambolena.</p>
+</section>
 
-  <div id="torohevitra"></div>
+<section class="panel" id="calendar">
+<h2>📅 Fotoana fambolena</h2>
+<div class="choices" id="crops"></div><div class="result" id="cropResult"></div>
+<p class="small">Miovaova arakaraka ny distrika, ny karazan-tany, ny rano ary ny rotsak'orana ny daty mety.</p>
+</section>
 
-  <script>
-    function asehoy(lohahevitra) {
-      const box = document.getElementById('torohevitra');
-      box.style.display = 'block';
-      if (lohahevitra === 'vary') {
-        box.innerHTML = '<h3>🌱 Fambolena Vary</h3><p>Mampiasà zezika voajanahary (zezi-pahitra sy mololo) ary araho tsara ny halalin\'ny rano eny an-tanimbary.</p>';
-      } else if (lohahevitra === 'katsaka') {
-        box.innerHTML = '<h3>🌽 Fambolena Katsaka</h3><p>Fidio ny masomboly tsara kalitao ary hajao ny elanelam-pambolena mba hahazoana vokatra tsara.</p>';
-      } else if (lohahevitra === 'rano') {
-        box.innerHTML = '<h3>💧 Fitantanana Rano</h3><p>Tehirizo sy tsinjovy ny rano indrindra amin\'ny fotoana main-tany.</p>';
-      } else if (lohahevitra === 'fiteny') {
-        box.innerHTML = '<h3>🌍 Safidy Fiteny</h3><p>Efa vonona ny teny Malagasy. Ho avy tsy ho ela ny dikanteny Frantsay.</p>';
-      }
-    }
-  </script>
+<section class="panel" id="profit">
+<h2>💰 Kajy tombony sy fatiantoka</h2>
+<label>Vola lany (Ar)</label><input id="cost" type="number" min="0" placeholder="Ohatra: 150000">
+<label>Vokatra azo (kg)</label><input id="quantity" type="number" min="0" step="0.1" placeholder="Ohatra: 500">
+<label>Vidin'ny 1 kg (Ar)</label><input id="price" type="number" min="0" placeholder="Ohatra: 2500">
+<button class="btn" onclick="calculate()">Kajio</button><div class="result" id="profitResult"></div>
+</section>
 
-</body>
-</html>
+<section class="panel" id="words">
+<h2>🌍 Fianarana teny</h2>
+<label>Safidio ny teny</label><select id="wordSelect"></select>
+<button class="btn" onclick="showWord()">Asehoy ny dikany</button><div class="result" id="wordResult"></div>
+</section>
+
+<section class="panel" id="about">
+<h2>ℹ️ Momba ny MadaAgri</h2>
+<p>Application natao hanampiana ny mpamboly hahazo torohevitra fototra, hanara-maso ny rano, hahafantatra soritr'aretina mahazatra, ary hikajy ny vola miditra sy mivoaka.</p>
+<p><b>Kinova:</b> 1.0 — fitsapana voalohany</p>
+<p><b>Faritra kendrena:</b> Toliara aloha, avy eo Madagasikara.</p>
+<p>Ny votoaty dia torohevitra ankapobeny fa tsy solon'ny teknisianina mpamboly.</p>
+</section>
+<footer>MadaAgri © 2026</footer>
+</main>
+<script>
+function showTab(id,btn){document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');}
+function result(id,msg){let e=document.getElementById(id);e.style.display='block';e.innerHTML=msg;}
+function checkWater(){let r=Number(document.getElementById('waterLevel').value),s=Number(document.getElementById('stage').value);if(document.getElementById('waterLevel').value===''||r<0)return result('waterResult','Ampidiro ny haavon’ny rano marina.');let msg;if(s===3)msg=r>0?'Alohan’ny fijinjana dia ahena tsikelikely ny rano, araka ny fahamasahan’ny vary sy ny toetry ny tany.':'Jereo raha efa masaka tsara ny vary ary azo idirana ny tanimbary.';else if(r===0)msg='Tsy misy rano hita. Jereo raha ilaina ny fampidirana rano arakaraka ny dingana sy ny toetry ny tany.';else if(r>10)msg='Mety ho lalina loatra ny rano. Diniho ny fampihenana azy mba tsy hanentsina ny zavamaniry.';else msg='Misy rano ao an-tanimbary. Araho maso tsy tapaka ny haavony sy ny toetry ny zavamaniry.';result('waterResult',msg);}
+const diseases=[['Ravina mavo','Mety ho tsy fahampian-tsakafo, rano tafahoatra na olana amin’ny faka. Jereo ny rano, ny faka ary ny zezika nampiasaina.'],['Pentina volondavenona','Mety ho aretina holatra, anisan’izany ny blast. Esory ny faritra tena voa raha azo atao ary manatona teknisianina raha miparitaka.'],['Lavaka amin’ny ravina','Mety misy bibikely mihinana ravina. Jereo ny zavamaniry maraina ary fantaro aloha ilay bibikely alohan’ny hampiasana fanafody.'],['Ravina mivalona','Mety ho bibikely, hafanana na tsy fahampian-drano. Jereo akaiky ny ravina sy ny taho.'],['Mihamaina ny zavamaniry','Mety ho tsy fahampian-drano, olana amin’ny faka na aretina. Jereo ny hamandoan’ny tany sy ny fototra.']];
+document.getElementById('symptoms').innerHTML=diseases.map((x,i)=>`<button class="choice" onclick="result('diseaseResult','<b>${x[0]}</b><br>${x[1]}')">${x[0]}</button>`).join('');
+const crops=[['Vary','Miankina amin’ny fisian’ny rano sy ny orana. Omano mialoha ny tanimbary sy ny masomboly.'],['Katsaka','Matetika ambolena amin’ny fiandohan’ny orana, rehefa ampy hamandoana ny tany.'],['Voanjo','Mila tany voadio sy tsy mitana rano be; fidio ny fotoana misy hamandoana ampy.'],['Mangahazo','Azo ambolena rehefa misy hamandoana ampy; fidio ny taho salama.'],['Tsaramaso','Fidio ny vanim-potoana tsy be loatra ny orana ary jereo ny karazan-tany.'],['Ovy mamy','Mila tany voaomana sy hamandoana ampy amin’ny fotoana iorenan’ny taho.']];
+document.getElementById('crops').innerHTML=crops.map((x,i)=>`<button class="choice" onclick="result('cropResult','<b>${x[0]}</b><br>${x[1]}')">${x[0]}</button>`).join('');
+function calculate(){let c=Number(cost.value),q=Number(quantity.value),p=Number(price.value);if(cost.value===''||quantity.value===''||price.value===''||c<0||q<0||p<0)return result('profitResult','Fenoy tsara ireo isa telo.');let income=q*p,net=income-c;result('profitResult',`Vola miditra: <b>${income.toLocaleString('fr-FR')} Ar</b><br>Vola lany: <b>${c.toLocaleString('fr-FR')} Ar</b><br><span class="metric">${net>=0?'Tombony: ':'Fatiantoka: '}${Math.abs(net).toLocaleString('fr-FR')} Ar</span>`);}
+const words=[['vary','riz','rice'],['rano','eau','water'],['orana','pluie','rain'],['zezika','engrais','fertilizer'],['tany','sol','soil'],['voa','graine','seed'],['ravina','feuille','leaf'],['faka','racine','root'],['tanimbary','rizière','rice field'],['katsaka','maïs','corn'],['mangahazo','manioc','cassava'],['voanjo','arachide','peanut'],['bibikely','insecte','insect'],['fijinjana','récolte','harvest'],['mpamboly','agriculteur','farmer']];
+document.getElementById('wordSelect').innerHTML=words.map((w,i)=>`<option value="${i}">${w[0]}</option>`).join('');
+function showWord(){let w=words[Number(wordSelect.value)];result('wordResult',`Malagasy: <b>${w[0]}</b><br>Français: <b>${w[1]}</b><br>English: <b>${w[2]}</b>`);}
+</script>
+</body></html>
