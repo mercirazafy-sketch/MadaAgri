@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="mg">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MadaAgri - Fambolena</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f9f4; margin: 0; padding: 20px; text-align: center; }
+    header { background-color: #2e7d32; color: white; padding: 15px; border-radius: 8px; }
+    .menu { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+    .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; font-weight: bold; color: #2e7d32; }
+    .card:hover { background-color: #e8f5e9; }
+    #torohevitra { margin-top: 20px; padding: 15px; background: white; border-radius: 8px; display: none; text-align: left; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🌾 MadaAgri</h1>
+    <p>Mpanampy ny tantsaha malagasy</p>
+  </header>
+
+  <div class="menu">
+    <div class="card" onclick="asehoy('vary')">🌱 Fambolena Vary</div>
+    <div class="card" onclick="asehoy('katsaka')">🌽 Fambolena Katsaka</div>
+    <div class="card" onclick="asehoy('rano')">💧 Fitantanana Rano</div>
+    <div class="card" onclick="asehoy('fiteny')">🌍 Fiteny (MG / FR)</div>
+  </div>
+
+  <div id="torohevitra"></div>
+
+  <script>
+    function asehoy(lohahevitra) {
+      const box = document.getElementById('torohevitra');
+      box.style.display = 'block';
+      if (lohahevitra === 'vary') {
+        box.innerHTML = '<h3>🌱 Fambolena Vary</h3><p>Mampiasà zezika voajanahary (zezi-pahitra sy mololo) ary araho tsara ny halalin\'ny rano eny an-tanimbary.</p>';
+      } else if (lohahevitra === 'katsaka') {
+        box.innerHTML = '<h3>🌽 Fambolena Katsaka</h3><p>Fidio ny masomboly tsara kalitao ary hajao ny elanelam-pambolena mba hahazoana vokatra tsara.</p>';
+      } else if (lohahevitra === 'rano') {
+        box.innerHTML = '<h3>💧 Fitantanana Rano</h3><p>Tehirizo sy tsinjovy ny rano indrindra amin\'ny fotoana main-tany.</p>';
+      } else if (lohahevitra === 'fiteny') {
+        box.innerHTML = '<h3>🌍 Safidy Fiteny</h3><p>Efa vonona ny teny Malagasy. Ho avy tsy ho ela ny dikanteny Frantsay.</p>';
+      }
+    }
+  </script>
+
+</body>
+</html>
